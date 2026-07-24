@@ -1,0 +1,14 @@
+[package]
+name = "rift-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+rift-protocol = { path = "../protocol" }
+rift-transport = { path = "../transport" }
+rift-transfer = { path = "../transfer" }
+
+tokio.workspace = true
+tracing.workspace = true

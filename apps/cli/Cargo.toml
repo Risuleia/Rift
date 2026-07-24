@@ -1,0 +1,16 @@
+[package]
+name = "rift-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "rift"
+path = "src/main.rs"
+
+[dependencies]
+rift-core = { path = "../../crates/core" }
+
+tokio.workspace = true
+tracing.workspace = true

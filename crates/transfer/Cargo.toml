@@ -1,0 +1,10 @@
+[package]
+name = "rift-transfer"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+rift-protocol = { path = "../protocol" }
+rift-transport = { path = "../transport" }
