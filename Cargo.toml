@@ -2,8 +2,8 @@
 resolver = "3"
 
 members = [
-    "apps/cli",
-    "crates/core",
+    "apps/cli", "crates/content",
+    "crates/core", "crates/direct-link", "crates/discovery", "crates/identity",
     "crates/protocol",
     "crates/transfer",
     "crates/transport",

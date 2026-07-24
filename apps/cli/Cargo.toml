@@ -11,6 +11,8 @@ path = "src/main.rs"
 
 [dependencies]
 rift-core = { path = "../../crates/core" }
+rift-transport = { path = "../../crates/transport" }
+rift-transfer = { path = "../../crates/transfer" }
 
 tokio.workspace = true
 tracing.workspace = true

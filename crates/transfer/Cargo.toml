@@ -8,3 +8,6 @@ repository.workspace = true
 [dependencies]
 rift-protocol = { path = "../protocol" }
 rift-transport = { path = "../transport" }
+
+tokio.workspace = true
+thiserror.workspace = true
