@@ -6,3 +6,12 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
+bytes.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+uuid.workspace = true
+prost.workspace = true
+
+[build-dependencies]
+prost-build.workspace = true
+protoc-bin-vendored.workspace = true

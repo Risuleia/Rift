@@ -1,0 +1,218 @@
+syntax = "proto3";
+
+package rift.protocol;
+
+message ChunkId {
+  bytes value = 1;
+}
+
+message PeerId {
+  bytes value = 1;
+}
+
+message SessionId {
+  bytes value = 1;
+}
+
+message TransferId {
+  bytes value = 1;
+}
+
+message ControlEnvelope {
+  oneof message {
+    Hello hello = 1;
+    Capabilities capabilities = 2;
+    SessionClose session_close = 3;
+
+    TransferOffer transfer_offer = 10;
+    TransferAccept transfer_accept = 11;
+    TransferReject transfer_reject = 12;
+
+    ManifestStart manifest_start = 20;
+    ManifestBatch manifest_batch = 21;
+    ManifestEnd manifest_end = 22;
+
+    NeedChunks need_chunks = 30;
+
+    TransferCancel transfer_cancel = 40;
+    TransferComplete transfer_complete = 41;
+    TransferVerified transfer_verified = 42;
+    TransferFailed transfer_failed = 43;
+
+    Ping ping = 50;
+    Pong pong = 51;
+  }
+}
+
+message ProtocolVersion {
+  uint32 major = 1;
+  uint32 minor = 2;
+}
+
+message Hello {
+  PeerId peer_id = 1;
+  SessionId session_id = 2;
+  ProtocolVersion protocol_version = 3;
+  string device_name = 4;
+}
+
+message Capabilities {
+  repeated TransportCapability transports = 1;
+  repeated CompressionCapability compression = 2;
+  repeated ChunkingCapability chunking = 3;
+  repeated FeatureCapability features = 4;
+}
+
+enum TransportCapability {
+  TRANSPORT_UNSPECIFIED = 0;
+  TRANSPORT_TCP = 1;
+  TRANSPORT_QUIC = 2;
+}
+
+enum CompressionCapability {
+  COMPRESSION_UNSPECIFIED = 0;
+  COMPRESSION_NONE = 1;
+  COMPRESSION_ZSTD = 2;
+  COMPRESSION_LZ4 = 3;
+}
+
+enum ChunkingCapability {
+  CHUNKING_UNSPECIFIED = 0;
+  CHUNKING_FIXED = 1;
+  CHUNKING_FAST_CDC = 2;
+}
+
+enum FeatureCapability {
+  FEATURE_UNSPECIFIED = 0;
+  FEATURE_RESUME = 1;
+  FEATURE_DEDUPLICATION = 2;
+  FEATURE_DELTA_TRANSFER = 3;
+  FEATURE_MULTIPATH = 4;
+}
+
+message SessionClose {
+  SessionCloseReason reason = 1;
+}
+
+enum SessionCloseReason {
+  CLOSE_UNSPECIFIED = 0;
+  CLOSE_NORMAL = 1;
+  CLOSE_INCOMPATIBLE_PROTOCOL = 2;
+  CLOSE_AUTHENTICATION_FAILED = 3;
+  CLOSE_PROTOCOL_VIOLATION = 4;
+  CLOSE_INTERNAL_ERROR = 5;
+}
+
+message TransferOffer {
+  TransferId transfer_id = 1;
+  string display_name = 2;
+  uint64 total_size = 3;
+  uint64 entry_count = 4;
+}
+
+message TransferAccept {
+  TransferId transfer_id = 1;
+}
+
+message TransferReject {
+  TransferId transfer_id = 1;
+  TransferRejectReason reason = 2;
+}
+
+enum TransferRejectReason {
+  REJECT_UNSPECIFIED = 0;
+  REJECT_DECLINED = 1;
+  REJECT_INSUFFICIENT_SPACE = 2;
+  REJECT_UNSUPPORTED_CONTENT = 3;
+  REJECT_POLICY_DENIED = 4;
+  REJECT_BUSY = 5;
+}
+
+message ManifestStart {
+  TransferId transfer_id = 1;
+  uint64 entry_count = 2;
+  uint64 total_size = 3;
+}
+
+message ManifestBatch {
+  TransferId transfer_id = 1;
+  uint32 sequence = 2;
+  repeated ManifestEntry entries = 3;
+}
+
+message ManifestEnd {
+  TransferId transfer_id = 1;
+  uint32 batch_count = 2;
+}
+
+message ManifestEntry {
+  oneof entry {
+    FileEntry file = 1;
+    DirectoryEntry directory = 2;
+  }
+}
+
+message FileEntry {
+  string path = 1;
+  uint64 size = 2;
+  repeated ChunkRef chunks = 3;
+}
+
+message DirectoryEntry {
+  string path = 1;
+}
+
+message ChunkRef {
+  ChunkId id = 1;
+  uint64 offset = 2;
+  uint32 size = 3;
+}
+
+message NeedChunks {
+  TransferId transfer_id = 1;
+  uint64 request_id = 2;
+  repeated ChunkId chunk_ids = 3;
+}
+
+message TransferCancel {
+  TransferId transfer_id = 1;
+  CancelReason reason = 2;
+}
+
+enum CancelReason {
+  CANCEL_UNSPECIFIED = 0;
+  CANCEL_USER_REQUESTED = 1;
+  CANCEL_INSUFFICIENT_SPACE = 2;
+  CANCEL_POLICY_DENIED = 3;
+  CANCEL_SHUTTING_DOWN = 4;
+}
+
+message TransferComplete {
+  TransferId transfer_id = 1;
+}
+
+message TransferVerified {
+  TransferId transfer_id = 1;
+}
+
+message TransferFailed {
+  TransferId transfer_id = 1;
+  TransferFailureReason reason = 2;
+}
+
+enum TransferFailureReason {
+  FAILURE_UNSPECIFIED = 0;
+  FAILURE_PROTOCOL_VIOLATION = 1;
+  FAILURE_INTEGRITY_FAILURE = 2;
+  FAILURE_STORAGE_FAILURE = 3;
+  FAILURE_UNSUPPORTED_CAPABILITY = 4;
+  FAILURE_INTERNAL_ERROR = 5;
+}
+
+message Ping {
+  uint64 nonce = 1;
+}
+
+message Pong {
+  uint64 nonce = 1;
+}

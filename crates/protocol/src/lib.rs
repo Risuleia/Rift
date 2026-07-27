@@ -1,14 +1,20 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+mod capabilities;
+mod error;
+mod ids;
+mod limits;
+mod manifest;
+mod message;
+mod path;
+mod state;
+mod version;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub mod wire;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use capabilities::*;
+pub use error::*;
+pub use ids::*;
+pub use manifest::*;
+pub use message::*;
+pub use path::*;
+pub use state::*;
+pub use version::*;
