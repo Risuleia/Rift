@@ -1,14 +1,28 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+//! Transport layer for Rift.
+//!
+//! This crate provides asynchronous byte-oriented communication over
+//! network transports. It intentionally has no knowledge of the Rift
+//! protocol, messages, or framing.
+//!
+//! Responsibilities:
+//! - Establish connections
+//! - Read and write byte streams
+//! - Expose transport-related errors
+//!
+//! Non-responsibilities:
+//! - Message framing
+//! - Serialization
+//! - Session management
+//! - File transfer logic
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+mod connection;
+mod writer;
+mod reader;
+mod error;
+mod util;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub mod quic;
+pub mod tcp;
+
+pub use connection::*;
+pub use error::*;

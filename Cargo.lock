@@ -515,6 +515,7 @@ dependencies = [
 name = "rift-transport"
 version = "0.1.0"
 dependencies = [
+ "bytes",
  "rift-protocol",
  "thiserror",
  "tokio",

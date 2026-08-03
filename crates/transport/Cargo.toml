@@ -10,3 +10,4 @@ rift-protocol = { path = "../protocol" }
 
 tokio.workspace = true
 thiserror.workspace = true
+bytes.workspace = true
